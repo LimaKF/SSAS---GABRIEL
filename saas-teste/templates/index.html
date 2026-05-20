@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meu SaaS | Planos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+
+    <div class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-4xl w-full space-y-8">
+            <div class="text-center">
+                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Escolha o plano ideal para você</h2>
+                <p class="mt-2 text-sm text-gray-600">Comece a testar seu SaaS hoje mesmo.</p>
+            </div>
+
+            <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
+                <!-- Plano Básico -->
+                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Básico</h3>
+                        <p class="mt-4 text-gray-500 text-sm">Perfeito para quem está começando agora.</p>
+                        <p class="mt-8">
+                            <span class="text-4xl font-extrabold text-gray-900">R$ 29</span>
+                            <span class="text-base font-medium text-gray-500">/mês</span>
+                        </p>
+                    </div>
+                    <button onclick="processarPagamento('basico')" class="mt-8 w-full bg-blue-50 text-blue-700 border border-blue-200 rounded-md py-2 px-4 font-semibold hover:bg-blue-100 transition-colors" id="btn-basico">
+                        Assinar Básico
+                    </button>
+                </div>
+
+                <!-- Plano Pro -->
+                <div class="bg-white border-2 border-blue-500 rounded-lg shadow-md p-6 flex flex-col justify-between relative">
+                    <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-2">
+                        <span class="inline-flex rounded-full bg-blue-500 px-3 py-1 text-xs font-bold text-white uppercase tracking-wider">Mais Popular</span>
+                    </div>
+                    <div>
+                        <h3 class="text-xl font-semibold text-gray-900">Pro</h3>
+                        <p class="mt-4 text-gray-500 text-sm">Para usuários que precisam de força total.</p>
+                        <p class="mt-8">
+                            <span class="text-4xl font-extrabold text-gray-900">R$ 99</span>
+                            <span class="text-base font-medium text-gray-500">/mês</span>
+                        </p>
+                    </div>
+                    <button onclick="processarPagamento('pro')" class="mt-8 w-full bg-blue-600 text-white rounded-md py-2 px-4 font-semibold hover:bg-blue-700 transition-colors" id="btn-pro">
+                        Assinar Pro
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function processarPagamento(plano) {
+            const btn = document.getElementById(`btn-${plano}`);
+            const textoOriginal = btn.innerText;
+            
+            // Estado de loading
+            btn.innerText = 'Processando...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            try {
+                const response = await fetch('/api/checkout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ plan: plano })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === 'success') {
+                    // Redireciona para a tela de sucesso
+                    window.location.href = data.redirect_url;
+                } else {
+                    alert('Erro: ' + data.message);
+                    resetarBotao(btn, textoOriginal);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro de conexão ao processar o pagamento.');
+                resetarBotao(btn, textoOriginal);
+            }
+        }
+
+        function resetarBotao(btn, texto) {
+            btn.innerText = texto;
+            btn.disabled = false;
+            btn.classList.remove('opacity-75', 'cursor-not-allowed');
+        }
+    </script>
+</body>
+</html>
