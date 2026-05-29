@@ -3,64 +3,422 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meu SaaS | Planos</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Tarot & Energia | Consultas Espirituais</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8c96e;
+            --gold-dim: #7a6330;
+            --deep: #0d0b14;
+            --dark: #13101f;
+            --card-bg: #1a1528;
+            --card-border: #2e2545;
+            --text: #e8dfc8;
+            --muted: #8a7f9a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--deep);
+            color: var(--text);
+            font-family: 'Crimson Text', Georgia, serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Starfield background */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 50% 8%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 88% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 35% 70%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(1px 1px at 60% 85%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 5% 90%, rgba(255,255,255,0.2) 0%, transparent 100%),
+                radial-gradient(1px 1px at 95% 10%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 80% 75%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(2px 2px at 18% 55%, rgba(201,168,76,0.3) 0%, transparent 100%),
+                radial-gradient(2px 2px at 65% 30%, rgba(201,168,76,0.2) 0%, transparent 100%),
+                radial-gradient(2px 2px at 45% 95%, rgba(201,168,76,0.2) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Radial glow center */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 50%;
+            transform: translateX(-50%);
+            width: 800px;
+            height: 500px;
+            background: radial-gradient(ellipse at center top, rgba(100,60,180,0.15) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 60px 24px 80px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 64px;
+            animation: fadeDown 0.8s ease both;
+        }
+
+        .header-symbol {
+            font-size: 2.5rem;
+            display: block;
+            margin-bottom: 16px;
+            filter: drop-shadow(0 0 12px rgba(201,168,76,0.6));
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { filter: drop-shadow(0 0 8px rgba(201,168,76,0.4)); }
+            50% { filter: drop-shadow(0 0 20px rgba(201,168,76,0.9)); }
+        }
+
+        .header h1 {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--gold-light);
+            text-shadow: 0 0 40px rgba(201,168,76,0.3);
+            line-height: 1.2;
+        }
+
+        .header-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0 16px;
+        }
+
+        .header-divider span {
+            display: block;
+            height: 1px;
+            width: 80px;
+            background: linear-gradient(to right, transparent, var(--gold-dim));
+        }
+
+        .header-divider span:last-child {
+            background: linear-gradient(to left, transparent, var(--gold-dim));
+        }
+
+        .header-divider em {
+            color: var(--gold);
+            font-style: normal;
+            font-size: 1rem;
+        }
+
+        .header p {
+            color: var(--muted);
+            font-size: 1.15rem;
+            font-style: italic;
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+
+        /* Cards grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 12px;
+            padding: 32px 24px 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+            animation: fadeUp 0.6s ease both;
+        }
+
+        .card:nth-child(1) { animation-delay: 0.1s; }
+        .card:nth-child(2) { animation-delay: 0.2s; }
+        .card:nth-child(3) { animation-delay: 0.3s; }
+        .card:nth-child(4) { animation-delay: 0.4s; }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at top center, rgba(100,60,180,0.08) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            border-color: var(--gold-dim);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.5), 0 0 24px rgba(201,168,76,0.08);
+        }
+
+        /* Destaque card */
+        .card.featured {
+            border-color: var(--gold-dim);
+            background: linear-gradient(160deg, #1e1836 0%, #1a1528 100%);
+            box-shadow: 0 0 32px rgba(201,168,76,0.1);
+        }
+
+        .card.featured:hover {
+            border-color: var(--gold);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 40px rgba(201,168,76,0.15);
+        }
+
+        .badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            color: var(--deep);
+            font-family: 'Cinzel', serif;
+            font-size: 0.6rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .card-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--gold-light);
+            letter-spacing: 0.03em;
+            line-height: 1.3;
+            margin-bottom: 10px;
+        }
+
+        .card-desc {
+            color: var(--muted);
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.55;
+            margin-bottom: 24px;
+            flex-grow: 1;
+        }
+
+        .card-price {
+            margin-bottom: 24px;
+        }
+
+        .card-price .amount {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        .card-price .currency {
+            font-size: 1rem;
+            color: var(--muted);
+            margin-right: 2px;
+        }
+
+        .card-price .cents {
+            font-size: 1.1rem;
+            color: var(--muted);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            border: 1px solid var(--gold-dim);
+            background: transparent;
+            color: var(--gold-light);
+            transition: all 0.25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(201,168,76,0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.25s;
+        }
+
+        .btn:hover::after { opacity: 1; }
+
+        .btn:hover {
+            border-color: var(--gold);
+            box-shadow: 0 0 16px rgba(201,168,76,0.2);
+            color: var(--gold-light);
+        }
+
+        .btn.featured-btn {
+            background: linear-gradient(135deg, var(--gold-dim), #5a4520);
+            border-color: var(--gold);
+            color: var(--gold-light);
+        }
+
+        .btn.featured-btn:hover {
+            background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+            color: var(--deep);
+            box-shadow: 0 0 24px rgba(201,168,76,0.35);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        /* Footer note */
+        .footer-note {
+            text-align: center;
+            margin-top: 48px;
+            color: var(--gold-dim);
+            font-size: 0.9rem;
+            font-style: italic;
+            animation: fadeUp 0.6s ease 0.6s both;
+        }
+
+        /* Animations */
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(24px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .grid { grid-template-columns: 1fr; }
+            .container { padding: 40px 16px 60px; }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 text-gray-800 font-sans antialiased flex flex-col min-h-screen">
+<body>
 
-    <div class="flex-grow flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-4xl w-full space-y-8">
-            <div class="text-center">
-                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Escolha o plano ideal para você</h2>
-                <p class="mt-2 text-sm text-gray-600">Comece a testar seu SaaS hoje mesmo.</p>
+    <div class="container">
+        <div class="header">
+            <span class="header-symbol">✦</span>
+            <h1>Consultas Espirituais</h1>
+            <div class="header-divider">
+                <span></span>
+                <em>✧</em>
+                <span></span>
             </div>
-
-            <div class="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2">
-                <!-- Plano Básico -->
-                <div class="bg-white border border-gray-200 rounded-lg shadow-sm p-6 flex flex-col justify-between hover:shadow-md transition-shadow">
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-900">Básico</h3>
-                        <p class="mt-4 text-gray-500 text-sm">Perfeito para quem está começando agora.</p>
-                        <p class="mt-8">
-                            <span class="text-4xl font-extrabold text-gray-900">R$ 29</span>
-                            <span class="text-base font-medium text-gray-500">/mês</span>
-                        </p>
-                    </div>
-                    <button onclick="processarPagamento('basico')" class="mt-8 w-full bg-blue-50 text-blue-700 border border-blue-200 rounded-md py-2 px-4 font-semibold hover:bg-blue-100 transition-colors" id="btn-basico">
-                        Assinar Básico
-                    </button>
-                </div>
-
-                <!-- Plano Pro -->
-                <div class="bg-white border-2 border-blue-500 rounded-lg shadow-md p-6 flex flex-col justify-between relative">
-                    <div class="absolute top-0 right-0 -translate-y-1/2 translate-x-2">
-                        <span class="inline-flex rounded-full bg-blue-500 px-3 py-1 text-xs font-bold text-white uppercase tracking-wider">Mais Popular</span>
-                    </div>
-                    <div>
-                        <h3 class="text-xl font-semibold text-gray-900">Pro</h3>
-                        <p class="mt-4 text-gray-500 text-sm">Para usuários que precisam de força total.</p>
-                        <p class="mt-8">
-                            <span class="text-4xl font-extrabold text-gray-900">R$ 99</span>
-                            <span class="text-base font-medium text-gray-500">/mês</span>
-                        </p>
-                    </div>
-                    <button onclick="processarPagamento('pro')" class="mt-8 w-full bg-blue-600 text-white rounded-md py-2 px-4 font-semibold hover:bg-blue-700 transition-colors" id="btn-pro">
-                        Assinar Pro
-                    </button>
-                </div>
-            </div>
+            <p>Escolha o caminho que ressoa com a sua alma e deixe as cartas iluminarem sua jornada.</p>
         </div>
+
+        <div class="grid">
+
+            <!-- Tiragem Simples -->
+            <div class="card">
+                <div>
+                    <span class="card-icon">🃏</span>
+                    <h3 class="card-title">Tiragem de Tarot Simples</h3>
+                    <p class="card-desc">Uma leitura direta e clara para uma questão específica que guia seu presente.</p>
+                    <div class="card-price">
+                        <span class="currency">R$</span><span class="amount">40</span>
+                    </div>
+                </div>
+                <button class="btn" onclick="processarPagamento('tarot_simples')" id="btn-tarot_simples">
+                    Consultar Agora
+                </button>
+            </div>
+
+            <!-- Tiragem Completa -->
+            <div class="card">
+                <div>
+                    <span class="card-icon">🔮</span>
+                    <h3 class="card-title">Tiragem de Tarot Completa</h3>
+                    <p class="card-desc">Leitura aprofundada que revela passado, presente e os caminhos do futuro.</p>
+                    <div class="card-price">
+                        <span class="currency">R$</span><span class="amount">99</span><span class="cents">,90</span>
+                    </div>
+                </div>
+                <button class="btn" onclick="processarPagamento('tarot_completa')" id="btn-tarot_completa">
+                    Consultar Agora
+                </button>
+            </div>
+
+            <!-- Limpeza Energética -->
+            <div class="card featured">
+                <span class="badge">✦ Popular</span>
+                <div>
+                    <span class="card-icon">🕯️</span>
+                    <h3 class="card-title">Limpeza Energética</h3>
+                    <p class="card-desc">Remoção de bloqueios e energias densas. Renove sua vibração e atraia o bem.</p>
+                    <div class="card-price">
+                        <span class="currency">R$</span><span class="amount">149</span><span class="cents">,90</span>
+                    </div>
+                </div>
+                <button class="btn featured-btn" onclick="processarPagamento('limpeza')" id="btn-limpeza">
+                    Consultar Agora
+                </button>
+            </div>
+
+            <!-- Consulta Completa -->
+            <div class="card">
+                <div>
+                    <span class="card-icon">🌙</span>
+                    <h3 class="card-title">Consulta Completa</h3>
+                    <p class="card-desc">Tarot + limpeza energética + orientação espiritual. A experiência mais profunda.</p>
+                    <div class="card-price">
+                        <span class="currency">R$</span><span class="amount">239</span><span class="cents">,90</span>
+                    </div>
+                </div>
+                <button class="btn" onclick="processarPagamento('consulta')" id="btn-consulta">
+                    Consultar Agora
+                </button>
+            </div>
+
+        </div>
+
+        <p class="footer-note">✦ &nbsp; Cada consulta é realizada com intenção, amor e respeito pela sua jornada &nbsp; ✦</p>
     </div>
 
     <script>
         async function processarPagamento(plano) {
             const btn = document.getElementById(`btn-${plano}`);
             const textoOriginal = btn.innerText;
-            
-            // Estado de loading
+
             btn.innerText = 'Processando...';
             btn.disabled = true;
-            btn.classList.add('opacity-75', 'cursor-not-allowed');
 
             try {
                 const response = await fetch('/api/checkout', {
@@ -72,7 +430,6 @@
                 const data = await response.json();
 
                 if (response.ok && data.status === 'success') {
-                    // Redireciona para a tela de sucesso
                     window.location.href = data.redirect_url;
                 } else {
                     alert('Erro: ' + data.message);
@@ -88,8 +445,8 @@
         function resetarBotao(btn, texto) {
             btn.innerText = texto;
             btn.disabled = false;
-            btn.classList.remove('opacity-75', 'cursor-not-allowed');
         }
     </script>
+
 </body>
 </html>

@@ -3,19 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pagamento Confirmado!</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Consulta Confirmada ✦</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #c9a84c;
+            --gold-light: #e8c96e;
+            --gold-dim: #7a6330;
+            --deep: #0d0b14;
+            --card-bg: #1a1528;
+            --card-border: #2e2545;
+            --text: #e8dfc8;
+            --muted: #8a7f9a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: var(--deep);
+            color: var(--text);
+            font-family: 'Crimson Text', Georgia, serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 50% 8%, rgba(255,255,255,0.5) 0%, transparent 100%),
+                radial-gradient(1px 1px at 72% 22%, rgba(255,255,255,0.3) 0%, transparent 100%),
+                radial-gradient(1px 1px at 88% 55%, rgba(255,255,255,0.4) 0%, transparent 100%),
+                radial-gradient(2px 2px at 18% 55%, rgba(201,168,76,0.3) 0%, transparent 100%),
+                radial-gradient(2px 2px at 65% 30%, rgba(201,168,76,0.2) 0%, transparent 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .card {
+            position: relative;
+            z-index: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            padding: 56px 48px;
+            max-width: 440px;
+            width: 90%;
+            text-align: center;
+            animation: fadeUp 0.7s ease both;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.5), 0 0 48px rgba(201,168,76,0.06);
+        }
+
+        .icon-wrap {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            border: 1px solid var(--gold-dim);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            font-size: 2rem;
+            animation: glow 2.5s ease-in-out infinite;
+            background: rgba(201,168,76,0.05);
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 12px rgba(201,168,76,0.2); }
+            50% { box-shadow: 0 0 28px rgba(201,168,76,0.5); }
+        }
+
+        h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            letter-spacing: 0.04em;
+            margin-bottom: 16px;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: center;
+            margin: 16px 0 20px;
+        }
+
+        .divider span {
+            display: block;
+            height: 1px;
+            width: 50px;
+            background: linear-gradient(to right, transparent, var(--gold-dim));
+        }
+
+        .divider span:last-child {
+            background: linear-gradient(to left, transparent, var(--gold-dim));
+        }
+
+        p {
+            color: var(--muted);
+            font-size: 1.1rem;
+            font-style: italic;
+            line-height: 1.65;
+            margin-bottom: 36px;
+        }
+
+        a {
+            font-family: 'Cinzel', serif;
+            font-size: 0.78rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--gold-dim);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: color 0.2s, border-color 0.2s;
+            padding-bottom: 2px;
+        }
+
+        a:hover {
+            color: var(--gold);
+            border-color: var(--gold-dim);
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
-<body class="bg-gray-50 h-screen flex items-center justify-center">
-    <div class="bg-white p-8 rounded-lg shadow-md max-w-md w-full text-center">
-        <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
-            <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
-            </svg>
+<body>
+    <div class="card">
+        <div class="icon-wrap">✦</div>
+        <h2>Consulta Confirmada</h2>
+        <div class="divider">
+            <span></span>
+            <span style="color:var(--gold-dim)">✧</span>
+            <span></span>
         </div>
-        <h2 class="text-2xl font-bold text-gray-900 mb-2">Pagamento Aprovado!</h2>
-        <p class="text-gray-600 mb-6">Obrigado por assinar o nosso SaaS. Seu acesso já está liberado.</p>
-        <a href="/" class="text-blue-600 hover:text-blue-800 font-medium">← Voltar para os planos</a>
+        <p>Seu pagamento foi recebido com gratidão. Entre em contato para agendar sua consulta espiritual.</p>
+        <a href="https://wa.me/5531999043494?text=Olá!%20Acabei%20de%20realizar%20o%20pagamento%20e%20gostaria%20de%20agendar%20minha%20consulta%20%F0%9F%94%AE" target="_blank" style="display:block; font-family:'Cinzel',serif; font-size:0.82rem; letter-spacing:0.08em; text-transform:uppercase; background:linear-gradient(135deg,#1a5c38,#0f3d25); color:#5de8a0; border:1px solid #2a7a50; border-radius:8px; padding:13px 20px; margin-bottom:20px; text-decoration:none; transition:all 0.25s;" onmouseover="this.style.boxShadow='0 0 20px rgba(45,200,100,0.25)'; this.style.borderColor='#3daa6a';" onmouseout="this.style.boxShadow='none'; this.style.borderColor='#2a7a50';">
+            💬 &nbsp; Entrar em Contato pelo WhatsApp
+        </a>
+        <a href="/">← Voltar ao início</a>
     </div>
 </body>
 </html>
