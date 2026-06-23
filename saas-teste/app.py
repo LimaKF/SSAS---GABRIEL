@@ -1,51 +1,25 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask
+from models import db
+from routes import api_routes  # Importa as rotas do outro arquivo
+import os
 
 app = Flask(__name__)
 
-SERVICOS = {
-    'tarot_simples': {
-        'nome': 'Tiragem de Tarot Simples',
-        'preco': 40.00
-    },
-    'tarot_completa': {
-        'nome': 'Tiragem de Tarot Completa',
-        'preco': 99.90
-    },
-    'limpeza': {
-        'nome': 'Limpeza Energética',
-        'preco': 149.90
-    },
-    'consulta': {
-        'nome': 'Consulta Completa',
-        'preco': 239.90
-    },
-}
+# Configuração do banco
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL', 'postgresql://postgres:senha_secreta_123@db:5432/gateway_saas'
+)
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-@app.route('/')
-def index():
-    return render_template('index.html')
+# Inicializa o banco
+db.init_app(app)
 
-@app.route('/api/checkout', methods=['POST'])
-def checkout():
-    data = request.json
-    plano = data.get('plan')
+# Registra as rotas
+app.register_blueprint(api_routes)
 
-    import time
-    time.sleep(1)  # Simulando tempo de processamento
-
-    if plano in SERVICOS:
-        servico = SERVICOS[plano]
-        return jsonify({
-            'status': 'success',
-            'message': f'Pagamento de "{servico["nome"]}" aprovado com sucesso!',
-            'redirect_url': '/sucesso'
-        })
-
-    return jsonify({'status': 'error', 'message': 'Serviço inválido'}), 400
-
-@app.route('/sucesso')
-def success():
-    return render_template('success.html')
+# Cria as tabelas se não existirem
+with app.app_context():
+    db.create_all()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0', port=5000)
